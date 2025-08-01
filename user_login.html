@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+       <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 24px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fafafa;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+       
+        .center-container input[type="email"],
+        .center-container input[type="password"] {
+            display: block;
+            margin-bottom: 12px;
+            width: 220px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #bbb;
+        }
+        .center-container input[type="submit"] {
+            padding: 8px 24px;
+            border-radius: 4px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .center-container label {
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+    </style>
+    <script>
+      // Retrieve stored credentials from localStorage
+         function getUsers() {
+        return JSON.parse(localStorage.getItem('usersLocastorage')) || [];
+      }
+      function setUsers(users) {
+        localStorage.setItem('usersLocastorage', JSON.stringify(users));
+      }
+function validate() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email) {
+    alert("Please enter email id");
+    return false;
+  } else if (!password) {
+    alert("Please enter password");
+    return false;
+  }
+
+  // Retrieve users array from localStorage
+  const users = JSON.parse(localStorage.getItem('usersLocastorage')) || [];
+  // Check if any user matches the entered credentials
+  const userFound = users.some(user => user.email === email && user.password === password);
+
+  if (!userFound) {
+    alert("Invalid email or password");
+    return false;
+  }
+  return true;
+}
+    </script>
+  </head>
+  <body>
+ 
+    <form
+      action="./loginsuccessful.html"
+      method="get"
+      onsubmit="return validate()"
+      
+    ><div class="center-container">
+         <h1>Login</h1>
+      Email <input type="email" name="email" id="email" /> 
+      Password
+      <input type="password" name="password" id="password" />
+      <input type="submit" value="Login" />
+    </div>
+      
+    </form>
+
+     
+   
+  </body>
+</html>

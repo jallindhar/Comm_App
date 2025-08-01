@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Group Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      .navbar {
+        display: flex;
+        background: #ccc;
+        padding: 0;
+      }
+      .navbar button {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        background: #ccc;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .navbar button:hover {
+        background: #bbb;
+      }
+      .container {
+        padding: 20px;
+      }
+      #chat-box {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #888;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f9f9f9;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input-row input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+      }
+      .input-row button {
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      function navigate(page) {
+        // Replace with your actual page URLs
+        if (page === "groupchat") window.location.href = "./group_chat.html";
+        if (page === "users") window.location.href = "./manage_users.html";
+        if (page === "documents") window.location.href = "./manage_document.html";
+        if (page === "logout") window.location.href = "./welcome_page.html";
+      }
+
+      function sendMessage() {
+        const input = document.getElementById("message-input");
+        const chatBox = document.getElementById("chat-box");
+        if (input.value.trim() !== "") {
+          const now = new Date();
+          const timestamp = now.toISOString().slice(0, 19).replace("T", " ");
+          chatBox.innerHTML += `<div>[${timestamp}] <b>You</b>: ${input.value}</div>`;
+          input.value = "";
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+
+      function refreshChat() {
+        // Placeholder for actual refresh logic (e.g., AJAX call)
+        // For now, just scroll to bottom
+        const chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      window.onload = function () {
+        refreshChat();
+      };
+    </script>
+  </head>
+  <body>
+    <div class="navbar">
+      <button onclick="navigate('groupchat')">Group Chat</button>
+      <button onclick="navigate('users')">Manage Users</button>
+      <button onclick="navigate('documents')">Manage Documents</button>
+      <button onclick="navigate('logout')">Logout</button>
+    </div>
+    <div class="container">
+      <h2>Group Chat</h2>
+      <div id="chat-box">
+        <!-- Example messages -->
+        [2024-06-01 10:00:00] <b>Text User</b>: Lorem ipsum dolor sit amet.<br />
+        [2024-06-01 10:05:00] <b>Anne Hunter</b>: tempor incididunt ut labore et
+        dolore magna.<br />
+      </div>
+      <div class="input-row">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Type your message here..."
+          onkeydown="if(event.key==='Enter'){sendMessage();}"
+        />
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="refreshChat()">Refresh</button>
+      </div>
+    </div>
+  </body>
+</html>

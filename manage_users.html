@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Group Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      .navbar {
+        display: flex;
+        background: #ccc;
+        padding: 0;
+      }
+      .navbar button {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        background: #ccc;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .navbar button:hover {
+        background: #bbb;
+      }
+      .container {
+        padding: 20px;
+      }
+      #chat-box {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #888;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f9f9f9;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input-row input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+      }
+      .input-row button {
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      function navigate(page) {
+        // Replace with your actual page URLs
+        if (page === "groupchat") window.location.href = "./group_chat.html";
+        if (page === "users") window.location.href = "./manage_users.html";
+        if (page === "documents") window.location.href = "./manage_document.html";
+        if (page === "logout") window.location.href = "./welcome_page.html";
+      }
+
+      
+       
+      
+      
+    </script>
+  </head>
+  <body>
+    <div class="navbar">
+      <button onclick="navigate('groupchat')">Group Chat</button>
+      <button onclick="navigate('users')">Manage Users</button>
+      <button onclick="navigate('documents')">Manage Documents</button>
+      <button onclick="navigate('logout')">Logout</button>
+    </div>
+    <div class="container">
+      <table id="users-table" style="width:100%; border-collapse:collapse; border:1px solid #888;">
+        <thead>
+          <tr style="background:#bbb;">
+            <th style="border:1px solid #888; padding:8px; text-align:left;">Name</th>
+            <th style="border:1px solid #888; padding:8px; text-align:left;">User Email ID</th>
+            <th style="border:1px solid #888; padding:8px; text-align:left;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <!-- User rows will be inserted here by JavaScript -->
+         <script>
+                const storedUsers = JSON.parse(localStorage.getItem('usersLocastorage'));
+                const table = document.getElementById('userTable');
+                for (let i = 0; i < storedUsers.length; i++) {
+                    const user = storedUsers[i];
+                    document.write(`
+                        <tr>
+                            <td>${user.fullname}</td>
+                            <td>${user.email}</td>
+                            <td><a href="./EditUser.html?id=${user.id}">Edit</a> | <a href="#" onclick="return deleteUserId(${user.id});">Delete</a></td>
+                        </tr>
+                        `);
+                }
+                document.write(`</table>`);
+            </script>
+      </table>
+    </div>
+    <!-- Edit User Modal -->
+    <div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.2); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:#fff; padding:32px 24px; border-radius:8px; min-width:320px; margin:auto; box-shadow:0 2px 16px rgba(0,0,0,0.15);">
+        <h2 style="text-align:center; margin-bottom:24px;">Edit User Information</h2>
+        <form id="editUserForm" autocomplete="off">
+          <div style="margin-bottom:18px; display:flex; align-items:center;">
+            <label for="editFullName" style="width:100px; font-weight:bold;">Full Name</label>
+            <input type="text" id="editFullName" name="fullname" style="flex:1; padding:8px; font-size:15px; border-radius:5px; border:1px solid #222;" required>
+          </div>
+          <div style="margin-bottom:24px; display:flex; align-items:center;">
+            <label for="editEmail" style="width:100px; font-weight:bold;">Email</label>
+            <input type="email" id="editEmail" name="email" style="flex:1; padding:8px; font-size:15px; border-radius:5px; border:1px solid #222;" required>
+          </div>
+          <div style="text-align:center;">
+            <button type="submit" style="background:#77ffff; color:#000; border:1px solid #222; border-radius:8px; padding:10px 40px; font-size:18px; cursor:pointer;">Save</button>
+            <button type="button" onclick="closeEditModal()" style="margin-left:12px; background:#eee; border:1px solid #888; border-radius:8px; padding:10px 24px; font-size:16px; cursor:pointer;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!--delete User modal -->
+        <div id="deleteUserModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.2); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:32px 24px; border-radius:8px; min-width:320px; margin:auto; box-shadow:0 2px 16px rgba(0,0,0,0.15); text-align:center;">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete this user?</p>
+    <button id="confirmDeleteBtn" style="background:#ff5252; color:#fff; border:1px solid #222; border-radius:8px; padding:10px 30px; font-size:16px; cursor:pointer;">OK</button>
+    <button onclick="closeDeleteModal()" style="margin-left:12px; background:#eee; border:1px solid #888; border-radius:8px; padding:10px 24px; font-size:16px; cursor:pointer;">Cancel</button>
+  </div>
+
+    <script>
+      // Helper to get users from localStorage
+      function getUsers() {
+        return JSON.parse(localStorage.getItem('usersLocastorage')) || [];
+      }
+      function setUsers(users) {
+        localStorage.setItem('usersLocastorage', JSON.stringify(users));
+      }
+
+      // Open modal and fill form
+      function openEditModal(userId) {
+        const users = getUsers();
+        const user = users.find(u => u.id == userId);
+        if (!user) return;
+        document.getElementById('editFullName').value = user.fullname;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('editUserModal').style.display = 'flex';
+        document.getElementById('editUserForm').setAttribute('data-userid', userId);
+      }
+
+      function closeEditModal() {
+        document.getElementById('editUserModal').style.display = 'none';
+        document.getElementById('editUserForm').reset();
+      }
+
+      // Handle form submit
+      document.getElementById('editUserForm').onsubmit = function(e) {
+        e.preventDefault();
+        const userId = this.getAttribute('data-userid');
+        const fullname = document.getElementById('editFullName').value.trim();
+        const email = document.getElementById('editEmail').value.trim();
+        let users = getUsers();
+        const idx = users.findIndex(u => u.id == userId);
+        if (idx !== -1) {
+          users[idx].fullname = fullname;
+          users[idx].email = email;
+          setUsers(users);
+          window.location.reload();
+        }
+        closeEditModal();
+      };
+
+      // Patch the Edit links to open modal
+      window.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('users-table');
+        if (!table) return;
+        table.querySelectorAll('a[href^="./EditUser.html"]').forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = new URL(link.href, window.location.href);
+            const id = url.searchParams.get('id');
+            openEditModal(id);
+          });
+        });
+      });
+      
+   
+    
+    </script>
+
+</div>
+    <script>
+
+
+  let deleteUserIdToDelete = null;
+
+  function deleteUserId(id) {
+    deleteUserIdToDelete = id;
+    document.getElementById('deleteUserModal').style.display = 'flex';
+    return false; // Prevent default link action
+  }
+
+  function closeDeleteModal() {
+    deleteUserIdToDelete = null;
+    document.getElementById('deleteUserModal').style.display = 'none';
+  }
+
+  document.getElementById('confirmDeleteBtn').onclick = function() {
+    if (deleteUserIdToDelete !== null) {
+      let users = getUsers();
+      users = users.filter(u => u.id != deleteUserIdToDelete);
+      setUsers(users);
+      closeDeleteModal();
+      window.location.reload();
+        }
+  };
+</script>
+   </tr>
+    
+    
+  </body>
+</html>

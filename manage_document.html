@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Group Chat</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      .navbar {
+        display: flex;
+        background: #ccc;
+        padding: 0;
+      }
+      .navbar button {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        background: #ccc;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .navbar button:hover {
+        background: #bbb;
+      }
+      .container {
+        padding: 20px;
+      }
+      #chat-box {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #888;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f9f9f9;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input-row input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+      }
+      .input-row button {
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      function navigate(page) {
+        // Replace with your actual page URLs
+        if (page === "groupchat") window.location.href = "./group_chat.html";
+        if (page === "users") window.location.href = "./manage_users.html";
+        if (page === "documents")
+          window.location.href = "./manage_document.html";
+        if (page === "logout") window.location.href = "./welcome_page.html";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="navbar">
+      <button onclick="navigate('groupchat')">Group Chat</button>
+      <button onclick="navigate('users')">Manage Users</button>
+      <button onclick="navigate('documents')">Manage Documents</button>
+      <button onclick="navigate('logout')">Logout</button>
+    </div>
+
+    <div class="container">
+      <h2>My Uploads</h2>
+      <table border="1" width="100%" cellpadding="5" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>File Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="myUploads">
+          <tr>
+            <td>Sales Report</td>
+            <td>sales-Sep2014.xls</td>
+            <td>
+              <button onclick="editUpload(this)">Edit</button>
+              <button onclick="deleteUpload(this)">Delete</button>
+              <button onclick="shareUpload(this)">Share</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Quaterly Summary</td>
+            <td>SummaryQ4-2014.ppt</td>
+            <td>
+              <button onclick="editUpload(this)">Edit</button>
+              <button onclick="deleteUpload(this)">Delete</button>
+              <button onclick="shareUpload(this)">Share</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Projection 2013-14</td>
+            <td>SalesProfitProjection.xls</td>
+            <td>
+              <button onclick="editUpload(this)">Edit</button>
+              <button onclick="deleteUpload(this)">Delete</button>
+              <button onclick="shareUpload(this)">Share</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <h2>Shared Uploads</h2>
+      <table border="1" width="100%" cellpadding="5" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>File Name</th>
+            <th>Shared by</th>
+          </tr>
+        </thead>
+        <tbody id="sharedUploads">
+          <tr>
+            <td>Sales Team Attendance Sept 2014</td>
+            <td>Sale-Attend-Sep2014.xls</td>
+            <td>anne.hunter@mail.com</td>
+          </tr>
+          <tr>
+            <td>Office Rules</td>
+            <td>OfficeRule.doc</td>
+            <td>hr@office.com</td>
+          </tr>
+        </tbody>
+      </table>
+      <br />
+      <form id="uploadForm" onsubmit="return addUpload(event)">
+        <input type="text" id="label" placeholder="Label" required />
+        <input type="text" id="filename" placeholder="File Name" required />
+        <button type="submit" style="background: #aef">+ Add Upload</button>
+      </form>
+    </div>
+    <script>
+      function editUpload(btn) {
+        const row = btn.closest("tr");
+        const label = row.children[0].innerText;
+        const filename = row.children[1].innerText;
+        const newLabel = prompt("Edit Label:", label);
+        const newFilename = prompt("Edit File Name:", filename);
+        if (newLabel !== null && newFilename !== null) {
+          row.children[0].innerText = newLabel;
+          row.children[1].innerText = newFilename;
+        }
+      }
+
+      function deleteUpload(btn) {
+        if (confirm("Are you sure you want to delete this upload?")) {
+          btn.closest("tr").remove();
+        }
+      }
+
+      function shareUpload(btn) {
+        alert("File shared successfully!");
+      }
+
+      function addUpload(event) {
+        event.preventDefault();
+        const label = document.getElementById("label").value;
+        const filename = document.getElementById("filename").value;
+        const tbody = document.getElementById("myUploads");
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+                <td>${label}</td>
+                <td>${filename}</td>
+                <td>
+                    <button onclick="editUpload(this)">Edit</button>
+                    <button onclick="deleteUpload(this)">Delete</button>
+                    <button onclick="shareUpload(this)">Share</button>
+                </td>
+            `;
+        tbody.appendChild(tr);
+        document.getElementById("uploadForm").reset();
+        return false;
+      }
+    </script>
+  </body>
+</html>

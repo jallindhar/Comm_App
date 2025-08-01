@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <script>
+        function validate() {
+            let fullname = document.getElementById("fullname").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            let user = {
+                id: Number(new Date()),
+                fullname: fullname,
+                email: email,
+                password: password
+            }
+
+            let users = localStorage.getItem("usersLocastorage") ? JSON.parse(localStorage.getItem("usersLocastorage")) : []; // ternary operator
+            users.push(user);
+
+            if (fullname == "") {
+                alert("Please enter fullname");
+                return false;
+            } else if (email == "") {
+                alert("Please enter email");
+                return false;
+            }
+            else if (password == "") {
+                alert("Please enter password");
+                return false;
+            }
+
+            localStorage.setItem("usersLocastorage", JSON.stringify(users)); // key and value pair
+
+            return true;
+        }
+    </script>
+</head>
+ 
+<body>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 24px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fafafa;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .center-container input[type="text"],
+        .center-container input[type="email"],
+        .center-container input[type="password"] {
+            display: block;
+            margin-bottom: 12px;
+            width: 220px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #bbb;
+        }
+        .center-container input[type="submit"] {
+            padding: 8px 24px;
+            border-radius: 4px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .center-container label {
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+    </style>
+     
+    <div class="center-container">
+        <h1>Register</h1>
+        <form action="./registration_successful.html" method="get" onsubmit="return validate()">
+            <label for="fullname">Fullname</label>
+            <input type="text" name="fullname" id="fullname">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+            <label for="confirmpassword">Confirm Password</label>
+            <input type="password" name="confirmpassword" id="confirmpassword">
+            <input type="submit" value="register">
+        </form>
+        <script>
+        document.setElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fullname = document.setElementById('fullname').value;
+            const email = document.setElementById('email').value;
+            const password = document.setElementById('password').value;
+            const confirmPassword = document.setElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+        
+
+            // Store user data in localStorage
+            localStorage.setItem('registeredUser', JSON.stringify(user));
+            alert('Registration successful!');
+            this.reset();
+        });
+    </script>
+    </div>
+     
+           
+</body>
+</html>

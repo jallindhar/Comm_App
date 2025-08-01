@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to Users Module</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 40px;
+      }
+      h1 {
+        margin-bottom: 40px;
+      }
+      .section {
+        margin: 40px 0;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 40px;
+        font-size: 16px;
+        border: 1.5px solid #000;
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to Users Module</h1>
+
+    <div class="section">
+      <div><b>Existing Users</b></div>
+      <button class="btn" onclick="window.location.href='./user_login.html'">
+        Login
+      </button>
+    </div>
+
+    <div class="section">
+      <div><b>New Users</b></div>
+      <button class="btn" onclick="window.location.href='./registration.html'">
+        Register
+      </button>
+    </div>
+  </body>
+</html>
